@@ -40,24 +40,15 @@ function initAgeGate() {
 
   if (!gate || !checkbox || !btn) return;
 
-  const enableBtn = () => {
+  const syncBtn = () => {
     btn.disabled = !checkbox.checked;
   };
 
-  checkbox.addEventListener('change', enableBtn);
+  checkbox.addEventListener('change', syncBtn);
+  checkbox.addEventListener('click', syncBtn);
 
-  // Also catch clicks on the text area
-  const checkboxContainer = checkbox.closest('.age-gate-checkbox');
-  if (checkboxContainer) {
-    checkboxContainer.addEventListener('click', (e) => {
-      if (e.target !== checkbox) {
-        checkbox.checked = !checkbox.checked;
-        enableBtn();
-      }
-    });
-  }
-
-  btn.addEventListener('click', () => {
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
     if (checkbox.checked) {
       localStorage.setItem('luna_age_verified', 'true');
       gate.style.display = 'none';
@@ -68,8 +59,7 @@ function initAgeGate() {
     gate.style.display = 'none';
   }
 
-  // Ensure button starts disabled
-  btn.disabled = true;
+  syncBtn();
 }
 
 // Sign Up
