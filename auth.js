@@ -3,16 +3,52 @@
 const SUPABASE_URL = 'YOUR_SUPABASE_URL';
 const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
+let supabase = null;
 let currentUser = null;
 
-// Auth state listener
-supabase.auth.onAuthStateChange((event, session) => {
-  currentUser = session?.user || null;
-  updateAuthUI(event, session);
-});
+function initSupabase() {
+  if (typeof window.supabase === 'undefined') {
+    console.warn('Supabase SDK not loaded yet.');
+    return;
+  }
+  if (!SUPABASE_URL || SUPABASE_URL === 'YOUR_SUPABASE_URL') return;
+  if (!SUPABASE_ANON_KEY || SUPABASE_ANON_KEY === 'YOUR_SUPABASE_ANON_KEY') return;
 
+  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  supabase.auth.onAuthStateChange((event, session) => {
+    currentUser = session?.user || null;
+    updateAuthUI(event, session);
+  });
+}
+
+// Age gate - runs immediately, no dependencies
+function initAgeGate() {
+  const gate = document.getElementById('age-gate');
+  const enterBtn = document.getElementById('age-gate-enter');
+  const leaveBtn = document.getElementById('age-gate-leave');
+
+  if (!gate || !enterBtn) return;
+
+  enterBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    localStorage.setItem('luna_age_verified', 'true');
+    gate.style.display = 'none';
+  });
+
+  if (leaveBtn) {
+    leaveBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.location.href = 'https://www.google.com';
+    });
+  }
+
+  if (localStorage.getItem('luna_age_verified') === 'true') {
+    gate.style.display = 'none';
+  }
+}
+
+// Auth state listener
 function updateAuthUI(event, session) {
   const loginLink = document.getElementById('nav-login');
   const joinLink = document.getElementById('nav-join');
@@ -32,30 +68,6 @@ function updateAuthUI(event, session) {
   }
 }
 
-// Age gate
-function initAgeGate() {
-  const gate = document.getElementById('age-gate');
-  const enterBtn = document.getElementById('age-gate-enter');
-  const leaveBtn = document.getElementById('age-gate-leave');
-
-  if (!gate || !enterBtn) return;
-
-  enterBtn.addEventListener('click', () => {
-    localStorage.setItem('luna_age_verified', 'true');
-    gate.style.display = 'none';
-  });
-
-  if (leaveBtn) {
-    leaveBtn.addEventListener('click', () => {
-      window.location.href = 'https://www.google.com';
-    });
-  }
-
-  if (localStorage.getItem('luna_age_verified') === 'true') {
-    gate.style.display = 'none';
-  }
-}
-
 // Sign Up
 async function handleSignUp(e) {
   e.preventDefault();
@@ -70,6 +82,11 @@ async function handleSignUp(e) {
 
   if (password.length < 6) {
     showAuthError('Password must be at least 6 characters.');
+    return;
+  }
+
+  if (!supabase) {
+    showAuthError('Authentication system not configured.');
     return;
   }
 
@@ -124,6 +141,11 @@ async function handleSignIn(e) {
     return;
   }
 
+  if (!supabase) {
+    showAuthError('Authentication system not configured.');
+    return;
+  }
+
   try {
     const { data, error } = await supabase.auth.signInWithPassword({
       email: email,
@@ -148,7 +170,9 @@ async function handleSignIn(e) {
 // Logout
 async function handleLogout() {
   try {
-    await supabase.auth.signOut();
+    if (supabase) {
+      await supabase.auth.signOut();
+    }
     exitPortal();
   } catch (err) {
     console.error('Logout error:', err);
@@ -204,7 +228,7 @@ function exitPortal() {
 }
 
 async function loadUserProfile() {
-  if (!currentUser) return;
+  if (!currentUser || !supabase) return;
 
   const { data, error } = await supabase
     .from('profiles')
@@ -223,6 +247,7 @@ async function loadUserProfile() {
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
   initAgeGate();
+  initSupabase();
 
   const signupForm = document.getElementById('signup-form');
   const signinForm = document.getElementById('signin-form');
