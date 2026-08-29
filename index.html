@@ -69,7 +69,7 @@
             <p>This site contains adult content intended for consenting adults only. You must be 18 years or older to enter.</p>
             <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
                 <button id="age-gate-leave" class="age-gate-btn age-gate-btn-secondary">Leave</button>
-                <button id="age-gate-enter" class="age-gate-btn">I Am 18+</button>
+                <button id="age-gate-enter" class="age-gate-btn" onclick="document.getElementById('age-gate').style.display='none'; localStorage.setItem('luna_age_verified','true');">I Am 18+</button>
             </div>
             <p style="margin-top: 24px; font-size: 11px; color: var(--text-muted);">By entering you agree to our Terms of Service and Privacy Policy.</p>
         </div>
