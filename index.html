@@ -1090,7 +1090,7 @@
                 <li><a href="#about">About</a></li>
                 <li><a href="#faq">FAQ</a></li>
                 <li><a href="#" id="nav-login" style="display: none;">Login</a></li>
-                <li><a href="#auth" id="nav-join" onclick="document.getElementById('auth-section').style.display='block'; switchAuthTab('signup'); document.getElementById('signup-email').focus();">Join Now</a></li>
+                <li><a href="#auth" id="nav-join" onclick="if(window.openAuthModal) window.openAuthModal('signup'); return false;">Join Now</a></li>
                 <li><a href="#" id="nav-portal" style="display: none;">Portal</a></li>
                 <li><a href="#" id="nav-account" style="display: none;">My Account</a></li>
             </ul>
@@ -1569,9 +1569,11 @@
         }
     </script>
 
-    <!-- Auth Section -->
-    <section id="auth-section" class="section" style="display: none;">
-        <div class="auth-container">
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="auth-modal-overlay" style="display: none;">
+        <div class="auth-modal-backdrop" onclick="document.getElementById('auth-modal').style.display='none'"></div>
+        <div class="auth-modal">
+            <button id="auth-close-btn" class="auth-modal-close" type="button">&times;</button>
             <div class="auth-card">
                 <h2>LUNA AI</h2>
                 <div id="auth-error" class="auth-error"></div>
@@ -1608,7 +1610,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 
     <!-- Portal Section -->
     <section id="portal-section" class="portal-section">

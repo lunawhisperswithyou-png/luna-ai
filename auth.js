@@ -22,30 +22,44 @@ function initSupabase() {
   });
 }
 
-// Age gate - runs immediately, no dependencies
-function initAgeGate() {
-  const gate = document.getElementById('age-gate');
-  const enterBtn = document.getElementById('age-gate-enter');
-  const leaveBtn = document.getElementById('age-gate-leave');
+// Auth modal - runs immediately, no dependencies
+function initAuthModal() {
+  const modal = document.getElementById('auth-modal');
+  const enterBtn = document.getElementById('auth-enter');
+  const signupBtn = document.getElementById('nav-join');
+  const loginBtn = document.getElementById('nav-login');
 
-  if (!gate || !enterBtn) return;
+  function openModal(tab = 'signup') {
+    if (!modal) return;
+    modal.style.display = 'flex';
+    switchAuthTab(tab || 'signup');
+    const email = document.getElementById((tab === 'signin' ? 'signin' : 'signup') + '-email');
+    if (email) setTimeout(() => email.focus(), 50);
+  }
 
-  enterBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    localStorage.setItem('luna_age_verified', 'true');
-    gate.style.display = 'none';
-  });
+  function closeModal() {
+    if (modal) modal.style.display = 'none';
+  }
 
-  if (leaveBtn) {
-    leaveBtn.addEventListener('click', (e) => {
+  if (signupBtn) {
+    signupBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      window.location.href = 'https://www.google.com';
+      openModal('signup');
     });
   }
 
-  if (localStorage.getItem('luna_age_verified') === 'true') {
-    gate.style.display = 'none';
+  if (loginBtn) {
+    loginBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openModal('signin');
+    });
   }
+
+  const closeBtn = document.getElementById('auth-close-btn');
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+
+  window.closeAuthModal = closeModal;
+  window.openAuthModal = openModal;
 }
 
 // Auth state listener
@@ -215,7 +229,7 @@ function enterPortal() {
   document.body.classList.add('portal-active');
   const portal = document.getElementById('portal-section');
   if (portal) portal.classList.add('active');
-  document.getElementById('auth-section').style.display = 'none';
+  closeAuthModal && closeAuthModal();
   loadChatHistory();
   loadUserProfile();
 }
@@ -224,7 +238,7 @@ function exitPortal() {
   document.body.classList.remove('portal-active');
   const portal = document.getElementById('portal-section');
   if (portal) portal.classList.remove('active');
-  document.getElementById('auth-section').style.display = 'block';
+  if (window.openAuthModal) window.openAuthModal('signin');
 }
 
 async function loadUserProfile() {
@@ -246,7 +260,7 @@ async function loadUserProfile() {
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
-  initAgeGate();
+  initAuthModal();
   initSupabase();
 
   const signupForm = document.getElementById('signup-form');
