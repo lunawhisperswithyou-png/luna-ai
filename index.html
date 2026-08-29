@@ -67,11 +67,11 @@
         <div class="age-gate-modal">
             <h2>Age Verification</h2>
             <p>This site contains adult content intended for consenting adults only. You must be 18 years or older to enter.</p>
-            <div class="age-gate-checkbox">
-                <input type="checkbox" id="age-gate-check">
-                <span>I am at least 18 years old and agree to the <a href="terms.html">Terms of Service</a> and <a href="privacy.html">Privacy Policy</a>.</span>
+            <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                <button id="age-gate-leave" class="age-gate-btn age-gate-btn-secondary">Leave</button>
+                <button id="age-gate-enter" class="age-gate-btn">I Am 18+</button>
             </div>
-            <button id="age-gate-btn" class="age-gate-btn" disabled>Enter Site</button>
+            <p style="margin-top: 24px; font-size: 11px; color: var(--text-muted);">By entering you agree to our Terms of Service and Privacy Policy.</p>
         </div>
     </div>
     <style>

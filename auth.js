@@ -35,31 +35,25 @@ function updateAuthUI(event, session) {
 // Age gate
 function initAgeGate() {
   const gate = document.getElementById('age-gate');
-  const checkbox = document.getElementById('age-gate-check');
-  const btn = document.getElementById('age-gate-btn');
+  const enterBtn = document.getElementById('age-gate-enter');
+  const leaveBtn = document.getElementById('age-gate-leave');
 
-  if (!gate || !checkbox || !btn) return;
+  if (!gate || !enterBtn) return;
 
-  const syncBtn = () => {
-    btn.disabled = !checkbox.checked;
-  };
-
-  checkbox.addEventListener('change', syncBtn);
-  checkbox.addEventListener('click', syncBtn);
-
-  btn.addEventListener('click', (e) => {
-    e.preventDefault();
-    if (checkbox.checked) {
-      localStorage.setItem('luna_age_verified', 'true');
-      gate.style.display = 'none';
-    }
+  enterBtn.addEventListener('click', () => {
+    localStorage.setItem('luna_age_verified', 'true');
+    gate.style.display = 'none';
   });
+
+  if (leaveBtn) {
+    leaveBtn.addEventListener('click', () => {
+      window.location.href = 'https://www.google.com';
+    });
+  }
 
   if (localStorage.getItem('luna_age_verified') === 'true') {
     gate.style.display = 'none';
   }
-
-  syncBtn();
 }
 
 // Sign Up

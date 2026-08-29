@@ -48,33 +48,7 @@
   margin-bottom: 32px;
 }
 
-.age-gate-checkbox {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 32px;
-  text-align: left;
-  font-size: 13px;
-  color: var(--portal-text);
-  line-height: 1.6;
-}
-
-.age-gate-checkbox input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  accent-color: var(--portal-accent);
-  cursor: pointer;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-
-.age-gate-checkbox a {
-  color: var(--portal-gold);
-  text-decoration: underline;
-}
-
 .age-gate-btn {
-  width: 100%;
   padding: 16px 32px;
   background: var(--portal-accent);
   color: var(--portal-text);
@@ -96,6 +70,18 @@
 .age-gate-btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+.age-gate-btn-secondary {
+  background: transparent;
+  border-color: var(--portal-border);
+  color: var(--portal-muted);
+}
+
+.age-gate-btn-secondary:hover {
+  border-color: var(--portal-text);
+  color: var(--portal-text);
+  transform: translateY(-2px);
 }
 
 /* Auth Forms */
