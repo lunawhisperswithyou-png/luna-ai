@@ -1,7 +1,7 @@
 /* auth.js - Supabase Auth logic */
 
-const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+const SUPABASE_URL = 'https://rzjprvkieduqbemaidzp.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6anBydmtpZWR1cWJlbWFpZHpwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwMDYxNzgsImV4cCI6MjEwMzU4MjE3OH0.Kb5B0y7bBKFA9hsrOJazZl5X1h6UqX522VJbie6eOxQ';
 
 let supabase = null;
 let currentUser = null;
